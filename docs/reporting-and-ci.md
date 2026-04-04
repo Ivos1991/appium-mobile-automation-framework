@@ -13,13 +13,27 @@ Current CI position:
 - `PR Validation` runs on every pull request, on `main`, and on manual dispatch
 - `PR Validation` performs dependency installation and typecheck only
 - `Nightly Smoke` runs on a nightly schedule and on manual dispatch
-- `Nightly Smoke` is intended for a self-hosted runner with Android support
+- `Nightly Smoke` runs the hosted Android smoke experiment on `ubuntu-latest`
 - `Nightly Smoke` performs:
   - dependency installation
   - latest demo APK download
   - smoke execution
   - Allure report generation
-  - artifact upload
+  - hosted Allure report publishing to `gh-pages`
+  - artifact upload for raw run evidence
+
+Hosted report behavior:
+
+- successful scheduled runs publish to `reports/nightly`
+- successful manual runs publish to `reports/run-<github_run_id>`
+- the workflow summary contains a direct "View your report here" link
+- GitHub Pages must be configured to serve from the `gh-pages` branch
+
+Branching note:
+
+- `main` is the stable publish branch
+- `hosted-runner-nightly` is the branch used to iterate on GitHub-hosted Android nightly execution
+- the split exists because Android emulator behavior on hosted Linux runners required targeted workflow tuning that should not destabilize the main branch during iteration
 
 Branch protection recommendation:
 

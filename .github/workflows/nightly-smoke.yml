@@ -15,10 +15,7 @@ permissions:
 jobs:
   smoke:
     name: Android Smoke
-    runs-on:
-      - self-hosted
-      - linux
-      - android
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       CI: true
@@ -47,6 +44,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
       - name: Download latest WebdriverIO demo APK
         shell: bash
@@ -85,10 +88,22 @@ jobs:
           PY
 
       - name: Run Android smoke scenario
-        shell: bash
-        run: |
-          mkdir -p artifacts/allure-results artifacts/appium-logs
-          npm run test:smoke
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          target: google_apis
+          profile: pixel_7_pro
+          emulator-boot-timeout: 900
+          disable-linux-hw-accel: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save
+          disable-animations: true
+          script: |
+            adb wait-for-device
+            until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; do sleep 5; done
+            mkdir -p artifacts/allure-results artifacts/appium-logs
+            adb devices
+            npx wdio run wdio.conf.ts --spec ./features/smoke.feature
 
       - name: Verify Allure raw results
         if: always() && hashFiles('artifacts/allure-results/**') != ''
@@ -106,13 +121,30 @@ jobs:
         if: always() && hashFiles('artifacts/allure-results/**') != ''
         run: npm run allure:generate
 
-      - name: Upload Allure report artifact
+      - name: Compute hosted report URL
         if: always() && hashFiles('artifacts/allure-report/**') != ''
-        uses: actions/upload-artifact@v4
+        id: hosted_report
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            REPORT_PATH="reports/nightly"
+          else
+            REPORT_PATH="reports/run-${{ github.run_id }}"
+          fi
+
+          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${REPORT_PATH}/"
+          echo "report_path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
+          echo "report_url=$REPORT_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy hosted Allure report
+        if: always() && hashFiles('artifacts/allure-report/**') != ''
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: nightly-smoke-allure-report
-          if-no-files-found: warn
-          path: artifacts/allure-report/
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./artifacts/allure-report
+          destination_dir: ${{ steps.hosted_report.outputs.report_path }}
+          keep_files: true
 
       - name: Upload test artifacts
         if: always()
@@ -121,3 +153,24 @@ jobs:
           name: nightly-smoke-artifacts
           if-no-files-found: warn
           path: artifacts/
+
+      - name: Add Allure report link to job summary
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          REPORT_URL: ${{ steps.hosted_report.outputs.report_url }}
+        with:
+          script: |
+            const reportUrl = process.env.REPORT_URL;
+            const summary = core.summary.addHeading('Allure Report', 2);
+
+            if (reportUrl) {
+              summary
+                .addRaw('View your report ')
+                .addLink('here', reportUrl)
+                .addRaw('.');
+            } else {
+              summary.addRaw('Hosted report was not generated for this run.');
+            }
+
+            await summary.write();
