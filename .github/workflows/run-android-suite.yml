@@ -117,11 +117,12 @@ jobs:
       - name: Run Android smoke scenario
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
-          arch: x86_64
+          api-level: 30
+          arch: x86
           target: google_apis
-          profile: pixel_6
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save
+          profile: pixel
+          emulator-boot-timeout: 900
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -no-snapshot-save -no-metrics
           disable-animations: true
           script: |
             test -f apps/android/wdio-demo-app.apk
