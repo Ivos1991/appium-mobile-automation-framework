@@ -78,15 +78,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Ensure UiAutomator2 driver is installed
-        shell: bash
-        run: |
-          if npx appium driver list --installed | grep -q 'uiautomator2'; then
-            echo "UiAutomator2 driver already installed."
-          else
-            npx appium driver install uiautomator2
-          fi
-
       - name: Download latest WebdriverIO demo APK
         shell: bash
         run: |
