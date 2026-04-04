@@ -1,0 +1,17 @@
+node_modules/
+artifacts/
+reports/
+allure-results/
+allure-report/
+.env
+dist/
+coverage/
+.idea/
+*.log
+public/
+tmp-ref-*/
+tools/android-sdk/
+tools/android-jbr/
+tools/*.zip
+tools/*.xml
+apps/android/*.apk

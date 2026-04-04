@@ -1,0 +1,21 @@
+name: Nightly Smoke
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-smoke-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  smoke:
+    uses: ./.github/workflows/run-android-suite.yml
+    with:
+      suite_name: Nightly Android Smoke
+      artifact_name: nightly-smoke-artifacts
+      timeout_minutes: 45

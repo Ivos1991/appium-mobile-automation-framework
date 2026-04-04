@@ -1,0 +1,36 @@
+{
+  "name": "mobile-banking-automation-framework",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Thin vertical slice of a mobile banking automation framework using WebdriverIO, Appium, Cucumber, and Allure.",
+  "scripts": {
+    "check:runtime": "powershell -ExecutionPolicy Bypass -File ./scripts/check-runtime.ps1",
+    "test": "wdio run wdio.conf.ts",
+    "test:login": "wdio run wdio.conf.ts --spec ./features/login.feature",
+    "test:smoke": "powershell -ExecutionPolicy Bypass -File ./scripts/run-smoke.ps1",
+    "typecheck": "tsc --noEmit",
+    "allure:open": "allure-commandline open ./artifacts/allure-report",
+    "allure:generate": "allure-commandline generate ./artifacts/allure-results --clean -o ./artifacts/allure-report"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.0.1",
+    "@types/node": "^22.10.2",
+    "@wdio/allure-reporter": "^9.4.4",
+    "@wdio/appium-service": "^9.4.4",
+    "@wdio/cli": "^9.4.4",
+    "@wdio/cucumber-framework": "^9.4.4",
+    "@wdio/globals": "^9.4.4",
+    "@wdio/local-runner": "^9.4.4",
+    "@wdio/spec-reporter": "^9.4.4",
+    "allure-commandline": "^2.34.1",
+    "appium": "^3.1.0",
+    "appium-uiautomator2-driver": "^7.1.0",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.7.2",
+    "webdriverio": "^9.4.4"
+  }
+}

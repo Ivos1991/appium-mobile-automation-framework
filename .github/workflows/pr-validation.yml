@@ -1,0 +1,23 @@
+name: PR Validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: pr-validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    uses: ./.github/workflows/run-android-suite.yml
+    with:
+      suite_name: Android Smoke Validation
+      artifact_name: pr-validation-artifacts
+      timeout_minutes: 45
