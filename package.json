@@ -10,8 +10,8 @@
     "test:login": "wdio run wdio.conf.ts --spec ./features/login.feature",
     "test:smoke": "powershell -ExecutionPolicy Bypass -File ./scripts/run-smoke.ps1",
     "typecheck": "tsc --noEmit",
-    "allure:open": "allure-commandline open ./artifacts/allure-report",
-    "allure:generate": "allure-commandline generate ./artifacts/allure-results --clean -o ./artifacts/allure-report"
+    "allure:open": "npx allure-commandline open ./artifacts/allure-report",
+    "allure:generate": "npx allure-commandline generate ./artifacts/allure-results --clean -o ./artifacts/allure-report"
   },
   "engines": {
     "node": ">=20.0.0"
