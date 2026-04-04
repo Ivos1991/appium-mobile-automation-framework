@@ -111,6 +111,14 @@ jobs:
           print(f"Downloaded {apk_url} -> {destination}")
           PY
 
+      - name: Verify CI runtime prerequisites
+        shell: bash
+        run: |
+          test -f apps/android/wdio-demo-app.apk
+          command -v adb
+          command -v appium
+          echo "CI runtime prerequisites look ready."
+
       - name: Run Android smoke scenario
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -124,7 +132,7 @@ jobs:
             adb wait-for-device
             until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; do sleep 5; done
             mkdir -p artifacts/allure-results artifacts/appium-logs
-            npm run check:runtime
+            adb devices
             npx wdio run wdio.conf.ts --spec ./features/smoke.feature
 
       - name: Verify Allure raw results
