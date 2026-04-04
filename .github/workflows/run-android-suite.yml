@@ -107,7 +107,7 @@ jobs:
         run: |
           test -f apps/android/wdio-demo-app.apk
           command -v adb
-          command -v appium
+          npx appium --version
           echo "CI runtime prerequisites look ready."
 
       - name: Run Android smoke scenario
