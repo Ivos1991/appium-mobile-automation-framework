@@ -159,6 +159,15 @@ The repository includes two GitHub Actions entrypoints:
 
 Use branch protection to require `PR Validation` for every pull request. Use `Nightly Smoke` for hosted nightly smoke execution and hosted Allure publishing.
 
+### CI Notes
+
+- `main` keeps the stable GitHub-hosted PR check through `PR Validation`
+- the hosted Android nightly experiment lives on the `hosted-runner-nightly` branch
+- that branch exists because Android emulator behavior on GitHub-hosted runners needed iterative tuning separate from the stable publish branch
+- hosted Allure reports from the nightly workflow are published to `gh-pages`
+- scheduled runs publish to `reports/nightly`
+- manual runs publish to `reports/run-<github_run_id>`
+
 ## Notes For Publishing
 
 - local runtime assets such as APKs, SDKs, emulator data, logs, and temporary reference repos are ignored

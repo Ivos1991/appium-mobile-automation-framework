@@ -21,3 +21,8 @@ Current guardrails:
 Recommended next step:
 
 - final cleanup, publishing, and branch protection using the `PR Validation` workflow
+
+Current branch note:
+
+- `main` is the stable branch for the framework and hosted PR validation
+- `hosted-runner-nightly` is the branch used to validate GitHub-hosted Android nightly smoke execution and hosted Allure publishing
