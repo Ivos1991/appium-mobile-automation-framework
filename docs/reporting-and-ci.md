@@ -13,13 +13,14 @@ Current CI position:
 - `PR Validation` runs on every pull request, on `main`, and on manual dispatch
 - `PR Validation` performs dependency installation and typecheck only
 - `Nightly Smoke` runs on a nightly schedule and on manual dispatch
-- `Nightly Smoke` is intended for a self-hosted runner with Android support
+- `Nightly Smoke` runs the hosted Android smoke experiment on `ubuntu-latest`
 - `Nightly Smoke` performs:
   - dependency installation
   - latest demo APK download
   - smoke execution
   - Allure report generation
-  - artifact upload
+  - hosted Allure report publishing to `gh-pages`
+  - artifact upload for raw run evidence
 
 Branch protection recommendation:
 

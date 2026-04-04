@@ -150,14 +150,14 @@ The repository includes two GitHub Actions entrypoints:
 - install dependencies
 - typecheck the project
 
-`Nightly Smoke` is intended for a self-hosted runner with Android runtime support:
+`Nightly Smoke` is the hosted Android smoke experiment on `ubuntu-latest`:
 
 - install dependencies
 - download the latest WebdriverIO demo APK
 - run the Android smoke scenario
-- generate and upload Allure artifacts
+- generate and publish a hosted Allure report
 
-Use branch protection to require `PR Validation` for every pull request. Use `Nightly Smoke` only on a runner that already has Android runtime support available.
+Use branch protection to require `PR Validation` for every pull request. Use `Nightly Smoke` for hosted nightly smoke execution and hosted Allure publishing.
 
 ## Notes For Publishing
 

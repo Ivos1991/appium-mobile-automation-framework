@@ -121,13 +121,30 @@ jobs:
         if: always() && hashFiles('artifacts/allure-results/**') != ''
         run: npm run allure:generate
 
-      - name: Upload Allure report artifact
+      - name: Compute hosted report URL
         if: always() && hashFiles('artifacts/allure-report/**') != ''
-        uses: actions/upload-artifact@v4
+        id: hosted_report
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            REPORT_PATH="reports/nightly"
+          else
+            REPORT_PATH="reports/run-${{ github.run_id }}"
+          fi
+
+          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${REPORT_PATH}/"
+          echo "report_path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
+          echo "report_url=$REPORT_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy hosted Allure report
+        if: always() && hashFiles('artifacts/allure-report/**') != ''
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: nightly-smoke-allure-report
-          if-no-files-found: warn
-          path: artifacts/allure-report/
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./artifacts/allure-report
+          destination_dir: ${{ steps.hosted_report.outputs.report_path }}
+          keep_files: true
 
       - name: Upload test artifacts
         if: always()
@@ -136,3 +153,18 @@ jobs:
           name: nightly-smoke-artifacts
           if-no-files-found: warn
           path: artifacts/
+
+      - name: Add Allure report link to job summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Allure Report"
+            echo
+
+            if [ -n "${{ steps.hosted_report.outputs.report_url }}" ]; then
+              echo "- Hosted report [here](${{ steps.hosted_report.outputs.report_url }})"
+            else
+              echo "- Hosted report was not generated for this run."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
