@@ -162,12 +162,15 @@ jobs:
         with:
           script: |
             const reportUrl = process.env.REPORT_URL;
+            const summary = core.summary.addHeading('Allure Report', 2);
 
-            await core.summary
-              .addHeading('Allure Report', 2)
-              .addRaw(
-                reportUrl
-                  ? `View your report [here](${reportUrl}).`
-                  : 'Hosted report was not generated for this run.'
-              )
-              .write();
+            if (reportUrl) {
+              summary
+                .addRaw('View your report ')
+                .addLink('here', reportUrl)
+                .addRaw('.');
+            } else {
+              summary.addRaw('Hosted report was not generated for this run.');
+            }
+
+            await summary.write();
