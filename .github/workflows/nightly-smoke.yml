@@ -15,10 +15,7 @@ permissions:
 jobs:
   smoke:
     name: Android Smoke
-    runs-on:
-      - self-hosted
-      - linux
-      - android
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       CI: true
@@ -47,6 +44,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
       - name: Download latest WebdriverIO demo APK
         shell: bash
@@ -85,10 +88,22 @@ jobs:
           PY
 
       - name: Run Android smoke scenario
-        shell: bash
-        run: |
-          mkdir -p artifacts/allure-results artifacts/appium-logs
-          npm run test:smoke
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          target: google_apis
+          profile: pixel_7_pro
+          emulator-boot-timeout: 900
+          disable-linux-hw-accel: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot-save
+          disable-animations: true
+          script: |
+            adb wait-for-device
+            until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; do sleep 5; done
+            mkdir -p artifacts/allure-results artifacts/appium-logs
+            adb devices
+            npx wdio run wdio.conf.ts --spec ./features/smoke.feature
 
       - name: Verify Allure raw results
         if: always() && hashFiles('artifacts/allure-results/**') != ''
