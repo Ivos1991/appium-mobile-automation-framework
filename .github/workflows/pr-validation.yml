@@ -11,13 +11,23 @@ concurrency:
   group: pr-validation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: write
-
 jobs:
   validate:
-    uses: ./.github/workflows/run-android-suite.yml
-    with:
-      suite_name: Android Smoke Validation
-      artifact_name: pr-validation-artifacts
-      timeout_minutes: 45
+    name: Typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck

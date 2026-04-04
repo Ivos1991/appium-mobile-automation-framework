@@ -11,16 +11,15 @@ Current reporting scope is intentionally small:
 Current CI position:
 
 - `PR Validation` runs on every pull request, on `main`, and on manual dispatch
+- `PR Validation` performs dependency installation and typecheck only
 - `Nightly Smoke` runs on a nightly schedule and on manual dispatch
-- the shared Android suite workflow performs:
+- `Nightly Smoke` is intended for a self-hosted runner with Android support
+- `Nightly Smoke` performs:
   - dependency installation
-  - typecheck
   - latest demo APK download
-  - Android emulator startup
   - smoke execution
   - Allure report generation
   - artifact upload
-- hosted Allure previews are published to `gh-pages` when the workflow has permission to write
 
 Branch protection recommendation:
 
