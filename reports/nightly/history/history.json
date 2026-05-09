@@ -1,1 +1,1 @@
-{"1df489bf29405be3ef714bc807665e3f":{"statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1},"items":[{"uid":"2ab27cf3e8f99f2d","status":"passed","time":{"start":1778216116454,"stop":1778216131115,"duration":14661}}]}}
+{"1df489bf29405be3ef714bc807665e3f":{"statistic":{"failed":1,"broken":0,"skipped":0,"passed":0,"unknown":0,"total":1},"items":[{"uid":"1ff4478ff11cb9e1","status":"failed","statusDetails":"Error: expect(received).toBe(expected) // Object.is equality","time":{"start":1778304140217,"stop":1778304142289,"duration":2072}}]}}
