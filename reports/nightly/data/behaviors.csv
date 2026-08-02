@@ -1,3 +1,3 @@
 "BROKEN","EPIC","FAILED","FEATURE","PASSED","SKIPPED","STORY","UNKNOWN"
-"0","","0","Mobile banking smoke path","1","0","successful login smoke path","0"
-"0","","0","Authentication","1","0","successful login smoke path","0"
+"0","","1","Mobile banking smoke path","0","0","successful login smoke path","0"
+"0","","1","Authentication","0","0","successful login smoke path","0"
