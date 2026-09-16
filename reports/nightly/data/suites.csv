@@ -1,2 +1,2 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","1530","successful login smoke path","Mobile banking smoke path","2026-09-15","failed","2026-09-15","","","",""
+"","10249","successful login smoke path","Mobile banking smoke path","2026-09-16","passed","2026-09-16","","","",""
