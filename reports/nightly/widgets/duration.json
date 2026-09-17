@@ -1,1 +1,1 @@
-[{"uid":"ff7398612c929405","name":"successful login smoke path","time":{"start":1789542762775,"stop":1789542773024,"duration":10249},"status":"passed","severity":"normal"}]
+[{"uid":"d5bbb153b02e0634","name":"successful login smoke path","time":{"start":1789629005275,"stop":1789629007151,"duration":1876},"status":"failed","severity":"normal"}]
